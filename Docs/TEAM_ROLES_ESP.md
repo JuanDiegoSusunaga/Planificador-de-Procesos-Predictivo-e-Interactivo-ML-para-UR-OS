@@ -12,7 +12,7 @@ Este documento describe los cuatro roles principales necesarios para completar e
 **Habilidades Recomendadas:** Java avanzado, buena comprensión de los estados de un sistema operativo y las colas.
 
 ## 2. 🧠 El Científico de Datos (Ingeniero ML)
-**Responsable:** `[Sin asignar]`
+**Responsable:** `Mariana Sandoval`
 **Fase de Enfoque:** Fase 2 (Machine Learning)
 **Responsabilidades:**
 - Trabajar exclusivamente en el directorio de Python `ml_training/`.
