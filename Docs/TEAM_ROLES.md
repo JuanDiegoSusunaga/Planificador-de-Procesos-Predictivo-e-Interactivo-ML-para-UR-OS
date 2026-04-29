@@ -12,7 +12,7 @@ This document outlines the four main roles required to complete the Predictive a
 **Recommended Skills:** Strong Java, good understanding of OS states and queues.
 
 ## 2. 🧠 The Data Scientist (ML Engineer)
-**Owner:** `[Unassigned]`
+**Owner:** `Mariana Sandoval`
 **Focus Phase:** Phase 2 (Machine Learning)
 **Responsibilities:**
 - Work exclusively in the `ml_training/` Python directory.
