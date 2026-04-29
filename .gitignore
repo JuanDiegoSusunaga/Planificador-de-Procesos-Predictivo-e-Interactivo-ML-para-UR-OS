@@ -1,1 +1,49 @@
-/dist/
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package Files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# IDE and Build directories (NetBeans, VSCode, etc)
+build/
+dist/
+nbproject/private/
+nbbuild/
+.vscode/
+.idea/
+*.iml
+
+# ---------------------------------------------------
+# Python & Machine Learning (Para la Fase 2 del proyecto)
+# ---------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales (Virtual environments)
+env/
+venv/
+.venv/
+.env
+
+# Jupyter Notebooks (Si deciden hacer pruebas interactivas)
+.ipynb_checkpoints/
+
+# Datasets y Modelos Entrenados (Evitar subir CSVs pesados)
+*.csv
+*.dat
+*.pkl
+*.h5
+*.model
+*.joblib
+
+# OS generated files (Windows / Mac)
+.DS_Store
+Thumbs.db

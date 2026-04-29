@@ -1,0 +1,23 @@
+# UR-OS ML Scheduler Project Rules
+
+## 1. Architecture & Language Rules
+- **Core is Untouchable**: The core of the UR-OS simulator (`src/ur_os/`) is written 100% in Java. Agents must never write C/C++ or Python code inside the main operating system packages.
+- **Separation of Concerns (ML vs OS)**: All code related to Machine Learning model training (Phase 2) must be written in Python (using scikit-learn, pandas, etc.) and strictly stored in a separate directory (e.g., `ml_training/` or `scripts/`).
+- **Lightweight Inference in Java**: The integration of the ML model into the kernel (Phase 3) must be done by exporting the model from Python into a lightweight format (such as auto-generated if/else rules, JSON, or a static tree class in Java). Do not add heavy ML dependencies (like TensorFlow) to the Java simulator.
+
+## 2. Performance Rules
+- **O(1) Telemetry**: Any code generated to capture metrics (CPU bursts, I/O blocks) in Phase 1 must be as non-invasive as possible. Agents must ensure telemetry executes in O(1) complexity to avoid introducing unrealistic overhead to the OS simulation.
+- **Millisecond Decisions**: The scheduling algorithm evaluating profiles (Phase 3) must be a simple and fast conditional evaluation. Agents must not perform network operations, file reads, or heavy calculations during the Context Switch.
+
+## 3. Structure & Naming Conventions
+- **New Schedulers Location**: Any new scheduling algorithm (e.g., `ML_Scheduler.java` or `Profile_Scheduler.java`) must extend the corresponding base classes and be placed strictly inside `src/ur_os/process/planning/`.
+- **English Everywhere**: All source code (class names, methods, variables), comments, Javadocs, and logic explanations must be written in English.
+
+## 4. Safe Modification Rules
+- **Respect the Classic Kernel**: Existing classic algorithms (FCFS, Paging, etc.) must not be modified or deleted. New Machine Learning logic must be added as additional options, not as destructive replacements.
+- **Standardized Logging**: When printing logs about the ML Decision Tree's choices, a specific format must be used to easily track the profile. Example: `[ML-SCHEDULER] Process P1 prioritized by profile: MULTIMEDIA`.
+
+## 5. Documentation & Good Practices (Scalability)
+- **Javadocs Everywhere**: Every new class, public method, and complex logic block must be documented using standard Javadocs (`/** ... */`). It must include `@param` and `@return` tags when applicable.
+- **No Magic Strings/Numbers**: Avoid hardcoding values (like quantum times or profile names). Use `Enum` classes (e.g., `UserProfile.java`) and `static final` constants.
+- **Clean Architecture (SOLID)**: Ensure classes have a single responsibility. Do not put Telemetry logic, ML Inference, and Process Management in the same file. Use interfaces to decouple components.
