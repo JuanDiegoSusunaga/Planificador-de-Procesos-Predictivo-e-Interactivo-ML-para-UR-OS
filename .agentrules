@@ -21,3 +21,6 @@
 - **Javadocs Everywhere**: Every new class, public method, and complex logic block must be documented using standard Javadocs (`/** ... */`). It must include `@param` and `@return` tags when applicable.
 - **No Magic Strings/Numbers**: Avoid hardcoding values (like quantum times or profile names). Use `Enum` classes (e.g., `UserProfile.java`) and `static final` constants.
 - **Clean Architecture (SOLID)**: Ensure classes have a single responsibility. Do not put Telemetry logic, ML Inference, and Process Management in the same file. Use interfaces to decouple components.
+
+## 6. Git & Collaboration Conventions
+- **Conventional Commits**: All commit messages must follow the standard: `<type>: <description>`. Types include `feat`, `fix`, `docs`, `chore`, `refactor`. (e.g., `feat: implement user profile enum`).
