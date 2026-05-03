@@ -3,7 +3,7 @@
 This document outlines the four main roles required to complete the Predictive and Interactive Process Scheduler project. Team members can assign their names to the role that best fits their skills and interests.
 
 ## 1. 🟢 The Telemetry Engineer (Java Core)
-**Owner:** `[Unassigned]`
+**Owner:** `Geronimo Rojas`
 **Focus Phase:** Phase 1 (Data Gathering)
 **Responsibilities:**
 - Hook into the core OS classes (`SystemOS.java`, `Process.java`, `CPU.java`).
