@@ -26,7 +26,10 @@ public class Process implements Comparable{
     int currentScheduler;
     int size;
     int priority;
-    
+    private String userIntent = "Unknown"; 
+    private int cpuBurstsCount = 0;
+    private int ioBlockCount = 0;
+    private int arrivalTime = 0;
 
     ProcessMemoryManager pmm;
     
@@ -245,6 +248,35 @@ public class Process implements Comparable{
     public int getPriority() {
         return priority;
     }
+
+       
+    public void setUserIntent(String intent) { 
+        this.userIntent = intent;
+    }
+    public String getUserIntent() { 
+        return this.userIntent;
+    }
     
+    public void setArrivalTime(int time) { 
+        this.arrivalTime = time;
+    }
+    public int getArrivalTime() { 
+        return this.arrivalTime;
+    }
     
+    public void addCpuBurst() { 
+        this.cpuBurstsCount++; 
+    }
+    public int getCpuBurstsCount() { 
+        return this.cpuBurstsCount;
+    }
+    
+    public void addIoBlock() {
+        this.ioBlockCount++;
+    }
+    public int getIoBlockCount() {
+        return this.ioBlockCount; 
+    }
+        
+        
 }
