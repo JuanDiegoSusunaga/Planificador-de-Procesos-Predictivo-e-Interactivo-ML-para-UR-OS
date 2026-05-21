@@ -278,6 +278,8 @@ public class OS {
         }else{
             p = new Process(process_count++, system.getTime());
         }
+        p.setArrivalTime(system.getTime());
+        p.setUserIntent(UR_OS.globalUserIntent);
         rq.addProcess(p);
         ProcessMemoryManager pmm;
         switch (SMM) {
