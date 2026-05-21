@@ -34,6 +34,7 @@ import ur_os.virtualmemory.*;
 import ur_os.virtualmemory.ProcessVirtualMemoryManagerType;
 import static ur_os.virtualmemory.ProcessVirtualMemoryManagerType.FIFO;
 import static ur_os.virtualmemory.ProcessVirtualMemoryManagerType.LRU;
+import ur_os.telemetry.TelemetryManager;
 
 
 /**
@@ -142,12 +143,24 @@ public class OS {
                 ioq.addProcess(p);
                 break;
             
-            case FINISH_PROCESS:
+           case FINISH_PROCESS:
                 p.setState(ProcessState.FINISHED);
                 p.setTime_finished(system.getTime());
                 System.out.println("Process Terminated: "+p.getPid()+" "+p.getSize());
                 fmm.reclaimMemory(p);
                 system.showFreeMemory();
+
+                int turnaroundTime = system.getTime() - p.getArrivalTime();
+                
+                TelemetryManager.getInstance().exportProcessData(
+                    p.getPid(),
+                    p.getUserIntent(),
+                    p.getCpuBurstsCount(),
+                    p.getIoBlockCount(),
+                    turnaroundTime
+                );
+               
+                
                 break;
             
             case IO_DONE: //It is assumed that the process in IO is done and it has been removed from the queue
