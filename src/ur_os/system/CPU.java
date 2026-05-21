@@ -51,6 +51,7 @@ public class CPU {
     public void addProcess(Process p){
         this.p = p;
         p.setState(ProcessState.CPU);
+        p.addCpuBurst();
     }
     
     public Process getProcess(){
@@ -90,6 +91,7 @@ public class CPU {
                 
             case IO:
                 System.out.println("Executing IO instruction");
+                p.addIoBlock();
                 tempp = removeProcess();
                 os.interrupt(InterruptType.CPU_TO_IO, tempp);
                 break;
