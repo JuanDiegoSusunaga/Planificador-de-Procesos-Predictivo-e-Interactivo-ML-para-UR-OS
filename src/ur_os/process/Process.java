@@ -277,6 +277,14 @@ public class Process implements Comparable{
     public int getIoBlockCount() {
         return this.ioBlockCount; 
     }
+
+    public void addExecutedCPUInstruction() {
+    this.cpuBurstsCount++;
+    }
+
+    public void addExecutedIOInstruction() {
+    this.ioBlockCount++;
+    }
         
         
 }

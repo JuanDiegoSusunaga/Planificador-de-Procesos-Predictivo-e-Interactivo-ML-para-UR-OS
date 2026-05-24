@@ -77,37 +77,64 @@ public class CPU {
     }
     
     public void advanceInstruction(){
-        
-        Instruction i = p.getCurrentInstruction();
-        p.advanceInstruction();
-        Process tempp;
-        switch(i.getType()){
-            case MEMORY -> {
-                //executeMemoryOperation((MemoryInstruction) i);
-                System.out.println("Executing Memory instruction");
-                tempp = removeProcess();
+    // Validaciones de seguridad
+    if (p == null) {
+        return;
+    }
+    
+    Instruction i = p.getCurrentInstruction();
+    if (i == null) {
+        Process tempp = removeProcess();
+        if (tempp != null && os != null) {
+            os.interrupt(InterruptType.FINISH_PROCESS, tempp);
+        }
+        return;
+    }
+    
+    boolean burstFinished = p.advanceInstruction();
+    
+    Process tempp;
+    switch(i.getType()){
+        case MEMORY -> {
+            System.out.println("Executing Memory instruction");
+            tempp = removeProcess();
+            if (os != null) {
                 os.interrupt(InterruptType.CPU_TO_MEMORY, tempp);
             }
-                
-            case IO -> {
-                System.out.println("Executing IO instruction");
-                p.addIoBlock();
-                tempp = removeProcess();
+        }
+            
+        case IO -> {
+            System.out.println("Executing IO instruction");
+            if (p != null) p.addIoBlock();
+            tempp = removeProcess();
+            if (os != null) {
                 os.interrupt(InterruptType.CPU_TO_IO, tempp);
             }
-                
-            case CPU -> executeCPUOperation((CPUInstruction) i);
+        }
             
-            case END -> {
+        case CPU -> {
+            System.out.println("Executing CPU instruction");
+            if (p != null) p.addCpuBurst();
+            if (burstFinished) {
                 tempp = removeProcess();
-                os.interrupt(InterruptType.FINISH_PROCESS, tempp);
+                if (os != null) {
+                    os.interrupt(InterruptType.CPU_TO_IO, tempp);
+                }
             }
-default -> throw new AssertionError(i.getType().name());
-
         }
         
-        
+        case END -> {
+            System.out.println("Process finished: " + (p != null ? p.getPid() : "unknown"));
+            tempp = removeProcess();
+            if (os != null) {
+                os.interrupt(InterruptType.FINISH_PROCESS, tempp);
+            }
+        }
+        default -> {
+            
+        }
     }
+}
     
     public void interrupt(InterruptType t, Process p, Instruction i){
         os.interrupt(t, p, i);

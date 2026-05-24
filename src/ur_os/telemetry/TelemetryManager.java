@@ -9,11 +9,11 @@ public class TelemetryManager {
     private static TelemetryManager instance;
     private BufferedWriter writer;
 
-    private final String CSV_PATH = "ml_training/datasets/telemetry_data.csv";
+    private final String CSV_PATH = "C:\\Users\\msand\\OneDrive\\Documentos\\GitHub\\Planificador-de-Procesos-Predictivo-e-Interactivo-ML-para-UR-OS\\ml_training\\datasets\\telemetry_data.csv";
 
     private TelemetryManager() {
         try {
-            File directory = new File("ml_training/datasets");
+            File directory = new File("C:\\Users\\msand\\OneDrive\\Documentos\\GitHub\\Planificador-de-Procesos-Predictivo-e-Interactivo-ML-para-UR-OS\\ml_training\\datasets");
             if (!directory.exists()) {
                 directory.mkdirs(); 
             }
@@ -22,7 +22,6 @@ public class TelemetryManager {
             
             writer = new BufferedWriter(new FileWriter(file, true));
             if (isNewFile) {
-                // Cabeceras exactas del Dataset
                 writer.write("ProcessID,UserIntent,CpuBursts,IoBlocks,TurnaroundTime");
                 writer.newLine();
                 writer.flush();
@@ -45,6 +44,7 @@ public class TelemetryManager {
                 writer.write(id + "," + intent + "," + cpuBursts + "," + ioBlocks + "," + turnaroundTime);
                 writer.newLine();
                 writer.flush();
+                System.out.println("✅ Datos guardados: " + id + "," + intent + "," + cpuBursts + "," + ioBlocks + "," + turnaroundTime);
             } catch (IOException e) {
                 System.err.println("Error guardando datos del proceso: " + id);
             }

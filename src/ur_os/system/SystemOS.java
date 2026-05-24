@@ -18,6 +18,7 @@ import ur_os.memory.freememorymagament.FreeMemorySlotManager;
 import ur_os.process.EndInstruction;
 import ur_os.process.IOInstruction;
 import ur_os.process.Instruction;
+import ur_os.process.CPUInstruction;
 import ur_os.virtualmemory.SwapMemory;
 
 /**
@@ -114,64 +115,39 @@ public class SystemOS implements Runnable{
         clock = 0;
     }
     
-    public void initSimulationQueueSimpler(){
+   public void initSimulationQueueSimpler(){
+    Random r = new Random();
+    processes.clear();
+    
+    for (int pid = 0; pid < 20; pid++) {
+        String userIntent;
+        if (pid % 3 == 0) {
+            userIntent = "Office";
+        } else if (pid % 3 == 1) {
+            userIntent = "Development";
+        } else {
+            userIntent = "Multimedia";
+        }
         
-        int tempSize;
-        Process p = new Process(0,0);
-        tempSize = r.nextInt(MAX_PROC_SIZE-1)+1;
-        p.setSize(tempSize);
-        Instruction temp;  
-        p.addCPUInstructions(3);
-        temp = new MemoryInstruction(MemoryOperationType.LOAD, r.nextInt(tempSize), (byte)-1, 4); //Load from logical address 5, 4 clock cycles    
-        p.addInstruction(temp);
-        p.addCPUInstructions(3);
-        temp = new EndInstruction();
-        p.addInstruction(temp);
+        Process p = new Process(pid, pid % 10);
+        p.setUserIntent(userIntent);
+        
+        int numCPU = r.nextInt(20) + 5;  // 5-25 instrucciones CPU
+        p.addCPUInstructions(numCPU);
+        
+        int numIO = r.nextInt(5) + 1;  // 1-5 operaciones I/O
+        for (int io = 0; io < numIO; io++) {
+            p.addInstruction(new IOInstruction(r.nextInt(10) + 2));
+            p.addCPUInstructions(r.nextInt(10) + 2);
+        }
+        
+        p.addInstruction(new EndInstruction());
         processes.add(p);
-        
-        
-        //Process 1
-        p = new Process(1,2);
-        tempSize = r.nextInt(MAX_PROC_SIZE-1)+1;
-        p.setSize(tempSize);
-        p.addCPUInstructions(3);
-        //temp = new IOInstruction(5); 
-        temp = new MemoryInstruction(MemoryOperationType.STORE, r.nextInt(tempSize), (byte)38, 3); //Store in logical address 10, valir 38, 3 clock cycles
-        p.addInstruction(temp);
-        p.addCPUInstructions(3);
-        temp = new EndInstruction();
-        p.addInstruction(temp);
-        processes.add(p);
-        
-        
-        //Process 2
-        p = new Process(2,6);
-        tempSize = r.nextInt(MAX_PROC_SIZE-1)+1;
-        p.setSize(tempSize);
-        p.addCPUInstructions(7);
-        //temp = new IOInstruction(3);    
-        temp = new MemoryInstruction(MemoryOperationType.LOAD, r.nextInt(tempSize), (byte)-1, 4); //Load from logical address 62, 4 clock cycles    
-        p.addInstruction(temp);
-        p.addCPUInstructions(5);
-        temp = new EndInstruction();
-        p.addInstruction(temp);
-        processes.add(p);
-        
-        //Process 3
-        p = new Process(3,8);
-        tempSize = r.nextInt(MAX_PROC_SIZE-1)+1;
-        p.setSize(tempSize);
-        p.addCPUInstructions(4);
-        //temp = new IOInstruction(3);    
-        temp = new MemoryInstruction(MemoryOperationType.STORE, r.nextInt(tempSize), (byte)42, 4); //Store in logical address 10, valir 38, 3 clock cycles
-        p.addInstruction(temp);
-        p.addCPUInstructions(7);
-        temp = new EndInstruction();
-        p.addInstruction(temp);
-        processes.add(p);
-        
-        clock = 0;
     }
+    
+    clock = 0;
+    System.out.println("✅ Creados " + processes.size() + " procesos VARIADOS");
+}
     
     public void initSimulationQueueSimpler3(){
         
