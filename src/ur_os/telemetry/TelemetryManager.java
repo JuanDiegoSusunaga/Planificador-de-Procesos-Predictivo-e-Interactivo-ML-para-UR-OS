@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class TelemetryManager {
+
     private static TelemetryManager instance;
     private BufferedWriter writer;
 
@@ -14,19 +15,24 @@ public class TelemetryManager {
     private TelemetryManager() {
         try {
             File directory = new File("ml_training/datasets");
+
             if (!directory.exists()) {
-                directory.mkdirs(); 
+                directory.mkdirs();
             }
+
             File file = new File(CSV_PATH);
-            boolean isNewFile = !file.exists();
-            
-            writer = new BufferedWriter(new FileWriter(file, true));
+
+            boolean appendMode = true;
+            boolean isNewFile = !file.exists() || !appendMode;
+
+            writer = new BufferedWriter(new FileWriter(file, appendMode));
+
             if (isNewFile) {
-                // Cabeceras exactas del Dataset
-                writer.write("ProcessID,UserIntent,CpuBursts,IoBlocks,TurnaroundTime");
+                writer.write("ProcessID,UserIntent,CpuCycles,IoBlocks,TurnaroundTime");
                 writer.newLine();
                 writer.flush();
             }
+
         } catch (IOException e) {
             System.err.println("Error iniciando telemetría: " + e.getMessage());
         }
@@ -39,12 +45,25 @@ public class TelemetryManager {
         return instance;
     }
 
-    public void exportProcessData(int id, String intent, int cpuBursts, int ioBlocks, int turnaroundTime) {
+    public void exportProcessData(
+            int id,
+            String intent,
+            int cpuCycles,
+            int ioBlocks,
+            int turnaroundTime
+    ) {
         if (writer != null) {
             try {
-                writer.write(id + "," + intent + "," + cpuBursts + "," + ioBlocks + "," + turnaroundTime);
+                writer.write(
+                        id + "," +
+                        intent + "," +
+                        cpuCycles + "," +
+                        ioBlocks + "," +
+                        turnaroundTime
+                );
                 writer.newLine();
                 writer.flush();
+
             } catch (IOException e) {
                 System.err.println("Error guardando datos del proceso: " + id);
             }
