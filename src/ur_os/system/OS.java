@@ -155,12 +155,18 @@ public class OS {
                 system.showFreeMemory();
 
                 int turnaroundTime = system.getTime() - p.getArrivalTime();
+                int waitingTime = turnaroundTime - p.getTotalCpuCyclesExecuted();
 
                 TelemetryManager.getInstance().exportProcessData(
+                        system.getClock(),
                         p.getPid(),
                         p.getUserIntent(),
+                        p.getSize(),
+                        p.getPriority(),
+                        p.getArrivalTime(),
                         p.getTotalCpuCyclesExecuted(),
                         p.getIoBlockCount(),
+                        waitingTime,
                         turnaroundTime
                 );
 
