@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ur_os.process;
 
 import ur_os.memory.ProcessMemoryManager;
@@ -14,7 +9,7 @@ import ur_os.system.OS;
  *
  * @author super
  */
-public class Process implements Comparable{
+public class Process implements Comparable {
     public static final int NUM_CPU_CYCLES = 3;
     public static final int MAX_CPU_CYCLES = 10;
     public static final int MAX_IO_CYCLES = 10;
@@ -27,12 +22,11 @@ public class Process implements Comparable{
     int size;
     int priority;
     private String userIntent = "Unknown"; 
-    private int cpuBurstsCount = 0;
+    private int totalCpuCyclesExecuted = 0; // Modificado: Ahora acumula ciclos reales de ejecución
     private int ioBlockCount = 0;
     private int arrivalTime = 0;
 
     ProcessMemoryManager pmm;
-    
     
     public Process() {
         this(false);
@@ -74,16 +68,10 @@ public class Process implements Comparable{
         
         if(autoProc){
             pil.generateRandomInstructions(NUM_CPU_CYCLES, MAX_CPU_CYCLES, MAX_IO_CYCLES);
-            //pil.generateSimpleBursts(); //Generates process with 3 bursts (CPU, IO, CPU) with 5 cycles each
-            
         }
-        
-        
         
         state = ProcessState.NEW;
         currentScheduler = 0;
-        
-        
     }
     
     public Process(Process p) {
@@ -91,7 +79,6 @@ public class Process implements Comparable{
         this.time_init = p.time_init;
         this.pil = new ProcessInstructionList(p.getPBL());
         this.pmm = p.pmm;
-        
     }
 
     public ProcessMemoryManager getPMM() {
@@ -201,7 +188,6 @@ public class Process implements Comparable{
         this.currentScheduler = currentScheduler;
     }
     
-    
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
@@ -221,34 +207,27 @@ public class Process implements Comparable{
         return sb.toString();
     }
     
-    
-
     @Override
     public int compareTo(Object o) {
         if(o instanceof Process){
             Process p = (Process)o;
             return this.getPid() - p.getPid();
         }
-        
         return -1;
     }
     
     @Override
     public boolean equals(Object o){
-    
         if(o instanceof Process){
             Process p = (Process)o;
             return this.getPid() == p.getPid();
         }
-        
         return false;
-        
     }
 
     public int getPriority() {
         return priority;
     }
-
        
     public void setUserIntent(String intent) { 
         this.userIntent = intent;
@@ -264,11 +243,12 @@ public class Process implements Comparable{
         return this.arrivalTime;
     }
     
-    public void addCpuBurst() { 
-        this.cpuBurstsCount++; 
+    // Modificado: Ahora añade ciclos de reloj reales ejecutados en la CPU
+    public void addCpuCycles(int cycles) { 
+        this.totalCpuCyclesExecuted += cycles; 
     }
-    public int getCpuBurstsCount() { 
-        return this.cpuBurstsCount;
+    public int getTotalCpuCyclesExecuted() { 
+        return this.totalCpuCyclesExecuted;
     }
     
     public void addIoBlock() {
@@ -277,6 +257,4 @@ public class Process implements Comparable{
     public int getIoBlockCount() {
         return this.ioBlockCount; 
     }
-        
-        
 }
