@@ -129,16 +129,33 @@ public class SystemOS implements Runnable {
 
         Random rand = new Random();
 
-        int numberOfProcesses = 20 + rand.nextInt(31);
+        int numberOfProcesses = 60;
 
         for (int i = 0; i < numberOfProcesses; i++) {
-            int arrivalTime = rand.nextInt(MAX_SIM_PROC_CREATION_TIME);
+
+            int arrivalTime;
+
+            if (rand.nextDouble() < 0.6) {
+                arrivalTime = rand.nextInt(15);
+            } else {
+                arrivalTime = 15 + rand.nextInt(MAX_SIM_PROC_CREATION_TIME - 15);
+            }
 
             Process p = new Process(i, arrivalTime);
 
-            int tempSize = 100 + rand.nextInt(MAX_PROC_SIZE - 100);
-            p.setSize(tempSize);
+            int tempSize;
 
+            if (intent.equals("Development")) {
+                tempSize = 500 + rand.nextInt(500);
+            } else if (intent.equals("Multimedia")) {
+                tempSize = 300 + rand.nextInt(600);
+            } else if (intent.equals("Office")) {
+                tempSize = 100 + rand.nextInt(400);
+            } else {
+                tempSize = 100 + rand.nextInt(MAX_PROC_SIZE - 100);
+            }
+
+            p.setSize(tempSize);
             p.setUserIntent(intent);
             p.setArrivalTime(arrivalTime);
             p.setTime_init(arrivalTime);
@@ -147,29 +164,61 @@ public class SystemOS implements Runnable {
             int cpu2;
             int numberOfIOBlocks;
 
+            double behavior = rand.nextDouble();
+
             switch (intent) {
                 case "Development":
-                    cpu1 = 8 + rand.nextInt(18);
-                    numberOfIOBlocks = rand.nextInt(3);
-                    cpu2 = 8 + rand.nextInt(18);
+                    if (behavior < 0.70) {
+                        cpu1 = 12 + rand.nextInt(25);
+                        cpu2 = 12 + rand.nextInt(25);
+                        numberOfIOBlocks = rand.nextInt(2);
+                    } else if (behavior < 0.90) {
+                        cpu1 = 6 + rand.nextInt(15);
+                        cpu2 = 6 + rand.nextInt(15);
+                        numberOfIOBlocks = 1 + rand.nextInt(3);
+                    } else {
+                        cpu1 = 3 + rand.nextInt(8);
+                        cpu2 = 3 + rand.nextInt(8);
+                        numberOfIOBlocks = 2 + rand.nextInt(4);
+                    }
                     break;
 
                 case "Multimedia":
-                    cpu1 = 3 + rand.nextInt(10);
-                    numberOfIOBlocks = 1 + rand.nextInt(5);
-                    cpu2 = 3 + rand.nextInt(10);
+                    if (behavior < 0.60) {
+                        cpu1 = 4 + rand.nextInt(12);
+                        cpu2 = 4 + rand.nextInt(12);
+                        numberOfIOBlocks = 3 + rand.nextInt(5);
+                    } else if (behavior < 0.90) {
+                        cpu1 = 8 + rand.nextInt(15);
+                        cpu2 = 8 + rand.nextInt(15);
+                        numberOfIOBlocks = 1 + rand.nextInt(3);
+                    } else {
+                        cpu1 = 15 + rand.nextInt(20);
+                        cpu2 = 15 + rand.nextInt(20);
+                        numberOfIOBlocks = rand.nextInt(2);
+                    }
                     break;
 
                 case "Office":
-                    cpu1 = 2 + rand.nextInt(8);
-                    numberOfIOBlocks = rand.nextInt(3);
-                    cpu2 = 2 + rand.nextInt(8);
+                    if (behavior < 0.50) {
+                        cpu1 = 2 + rand.nextInt(8);
+                        cpu2 = 2 + rand.nextInt(8);
+                        numberOfIOBlocks = 1 + rand.nextInt(3);
+                    } else if (behavior < 0.80) {
+                        cpu1 = 1 + rand.nextInt(5);
+                        cpu2 = 1 + rand.nextInt(5);
+                        numberOfIOBlocks = rand.nextInt(2);
+                    } else {
+                        cpu1 = 6 + rand.nextInt(12);
+                        cpu2 = 6 + rand.nextInt(12);
+                        numberOfIOBlocks = 2 + rand.nextInt(3);
+                    }
                     break;
 
                 default:
                     cpu1 = 4 + rand.nextInt(12);
-                    numberOfIOBlocks = rand.nextInt(4);
                     cpu2 = 4 + rand.nextInt(12);
+                    numberOfIOBlocks = rand.nextInt(4);
                     break;
             }
 
