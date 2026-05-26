@@ -7,6 +7,8 @@ package ur_os.process.planning;
 
 import java.util.ArrayList;
 import ur_os.process.Process;
+import ur_os.process.planning.predictive.ML_Scheduler;
+import ur_os.process.planning.predictive.RuleBasedEvaluator;
 import ur_os.system.OS;
 
 /**
@@ -27,12 +29,14 @@ public class ReadyQueue {
         //s = new SJF_NP(os);
         
         s = new FCFS(os);
-        
+
         //s = new RoundRobin(os,6);
-        
+
         //s = new MFQ(os,new RoundRobin(os,3),new RoundRobin(os,6),new FCFS(os));
-        
+
         //s = new PriorityQueue(os,new RoundRobin(os,9,false),new RoundRobin(os,6,false),new RoundRobin(os,3,false),new RoundRobin(os,2,false));
+
+        //s = new ML_Scheduler(os, new RuleBasedEvaluator()); //Fase 3: planificador predictivo (User Intent + reglas ML)
     }
     
     public ReadyQueue(OS OS, Scheduler s){

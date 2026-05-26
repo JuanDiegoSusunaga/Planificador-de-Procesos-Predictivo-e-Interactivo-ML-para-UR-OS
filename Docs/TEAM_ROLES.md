@@ -22,7 +22,7 @@ This document outlines the four main roles required to complete the Predictive a
 **Recommended Skills:** Python, Pandas, Scikit-learn, Data Analysis.
 
 ## 3. ⚙️ The Scheduler Architect (Java ML Integrator)
-**Owner:** `[Unassigned]`
+**Owner:** `Juan Diego Susunaga`
 **Focus Phase:** Phase 3 (Predictive Planning)
 **Responsibilities:**
 - Create the `ML_Scheduler.java` class inside the `predictive` package.

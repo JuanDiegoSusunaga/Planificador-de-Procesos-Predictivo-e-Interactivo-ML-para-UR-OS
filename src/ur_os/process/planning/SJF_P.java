@@ -20,19 +20,35 @@ public class SJF_P extends Scheduler{
     }
     
     @Override
-    public void newProcess(boolean cpuEmpty){// When a NEW process enters the queue, process in CPU, if any, is extracted to compete with the rest
-        //ToDo
-    } 
+    public void newProcess(boolean cpuEmpty){
+        if (!cpuEmpty) {
+            os.interrupt(InterruptType.SCHEDULER_CPU_TO_RQ, null);
+        }
+    }
 
     @Override
-    public void IOReturningProcess(boolean cpuEmpty){// When a process return from IO and enters the queue, process in CPU, if any, is extracted to compete with the rest
-        //ToDo        
-    } 
-    
-   
+    public void IOReturningProcess(boolean cpuEmpty){
+        if (!cpuEmpty) {
+            os.interrupt(InterruptType.SCHEDULER_CPU_TO_RQ, null);
+        }
+    }
+
+
     @Override
     public void getNext(boolean cpuEmpty) {
-       //ToDo
+        if (processes.isEmpty() || !cpuEmpty) return;
+
+        Process shortest = processes.getFirst();
+        int minRemaining = shortest.getRemainingTimeInCurrentBurst();
+        for (Process p : processes) {
+            int r = p.getRemainingTimeInCurrentBurst();
+            if (r < minRemaining) {
+                minRemaining = r;
+                shortest = p;
+            }
+        }
+        processes.remove(shortest);
+        os.interrupt(InterruptType.SCHEDULER_RQ_TO_CPU, shortest);
     }
     
 }

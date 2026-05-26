@@ -3,7 +3,7 @@
 Este documento describe los cuatro roles principales necesarios para completar el proyecto del Planificador de Procesos Predictivo e Interactivo. Los miembros del equipo pueden asignar sus nombres al rol que mejor se adapte a sus habilidades e intereses.
 
 ## 1. 🟢 El Ingeniero de Telemetría (Core de Java)
-**Responsable:** `[Sin asignar]`
+**Responsable:** `Geronimo Rojas`
 **Fase de Enfoque:** Fase 1 (Recolección de Datos)
 **Responsabilidades:**
 - Integrarse en las clases principales del OS (`SystemOS.java`, `Process.java`, `CPU.java`).
@@ -22,7 +22,7 @@ Este documento describe los cuatro roles principales necesarios para completar e
 **Habilidades Recomendadas:** Python, Pandas, Scikit-learn, Análisis de Datos.
 
 ## 3. ⚙️ El Arquitecto del Planificador (Integrador ML en Java)
-**Responsable:** `[Sin asignar]`
+**Responsable:** `Juan Diego Susunaga`
 **Fase de Enfoque:** Fase 3 (Planificación Predictiva)
 **Responsabilidades:**
 - Crear la clase `ML_Scheduler.java` dentro del paquete `predictive`.

@@ -43,11 +43,26 @@ public class RoundRobin extends Scheduler{
    
     @Override
     public void getNext(boolean cpuEmpty) {
-        //ToDo
-        
+        if (cpuEmpty) {
+            if (!processes.isEmpty()) {
+                Process p = processes.removeFirst();
+                os.interrupt(InterruptType.SCHEDULER_RQ_TO_CPU, p);
+                resetCounter();
+            }
+            return;
+        }
+
+        cont++;
+        if (cont >= q) {
+            if (!processes.isEmpty()) {
+                Process next = processes.removeFirst();
+                os.interrupt(InterruptType.SCHEDULER_CPU_TO_RQ, next);
+            }
+            resetCounter();
+        }
     }
-    
-    
+
+
     @Override
     public void newProcess(boolean cpuEmpty) {} //Non-preemtive in this event
 
