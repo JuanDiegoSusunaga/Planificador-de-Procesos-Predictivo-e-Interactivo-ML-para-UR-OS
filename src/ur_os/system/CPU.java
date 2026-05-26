@@ -41,7 +41,14 @@ public class CPU {
     public void addProcess(Process p) {
         this.p = p;
         p.setState(ProcessState.CPU);
+
+        if (!p.hasStartedExecution()) {
+            int responseTime = os.getClock() - p.getArrivalTime();
+            p.setResponseTime(responseTime);
+            p.markStartedExecution();
+        }
     }
+
 
     public Process getProcess() {
         return p;
