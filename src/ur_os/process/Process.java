@@ -27,6 +27,8 @@ public class Process implements Comparable {
     private int totalCpuCyclesExecuted = 0;
     private int ioBlockCount = 0;
     private int arrivalTime = 0;
+    private int responseTime = -1;
+    private boolean hasStartedExecution = false;
 
     ProcessMemoryManager pmm;
 
@@ -247,6 +249,22 @@ public class Process implements Comparable {
 
     public int getIoBlockCount() {
         return this.ioBlockCount;
+    }
+    
+    public int getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(int responseTime) {
+        this.responseTime = responseTime;
+    }
+
+    public boolean hasStartedExecution() {
+        return hasStartedExecution;
+    }
+
+    public void markStartedExecution() {
+        this.hasStartedExecution = true;
     }
 
     @Override
