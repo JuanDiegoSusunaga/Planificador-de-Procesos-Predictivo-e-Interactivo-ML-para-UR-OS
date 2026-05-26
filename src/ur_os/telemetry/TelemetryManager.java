@@ -28,7 +28,7 @@ public class TelemetryManager {
             writer = new BufferedWriter(new FileWriter(file, appendMode));
 
             if (isNewFile) {
-                writer.write("ProcessID,UserIntent,CpuCycles,IoBlocks,TurnaroundTime");
+                writer.write("SimulationRun,ProcessID,UserIntent,ProcessSize,Priority,ArrivalTime,CpuCycles,IoBlocks,WaitingTime,TurnaroundTime");
                 writer.newLine();
                 writer.flush();
             }
@@ -46,26 +46,35 @@ public class TelemetryManager {
     }
 
     public void exportProcessData(
-            int id,
-            String intent,
+            int simulationRun,
+            int processId,
+            String userIntent,
+            int processSize,
+            int priority,
+            int arrivalTime,
             int cpuCycles,
             int ioBlocks,
+            int waitingTime,
             int turnaroundTime
     ) {
         if (writer != null) {
             try {
                 writer.write(
-                        id + "," +
-                        intent + "," +
+                        simulationRun + "," +
+                        processId + "," +
+                        userIntent + "," +
+                        processSize + "," +
+                        priority + "," +
+                        arrivalTime + "," +
                         cpuCycles + "," +
                         ioBlocks + "," +
+                        waitingTime + "," +
                         turnaroundTime
                 );
                 writer.newLine();
                 writer.flush();
-
             } catch (IOException e) {
-                System.err.println("Error guardando datos del proceso: " + id);
+                System.err.println("Error guardando datos del proceso: " + processId);
             }
         }
     }
