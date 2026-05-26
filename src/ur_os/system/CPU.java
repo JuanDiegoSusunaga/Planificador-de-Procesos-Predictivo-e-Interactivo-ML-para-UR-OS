@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ur_os.system;
 
 import ur_os.memory.Memory;
@@ -15,7 +10,6 @@ import ur_os.process.ProcessInstructionType;
 import ur_os.process.ProcessState;
 import ur_os.virtualmemory.SwapMemory;
 
-
 /**
  *
  * @author super
@@ -25,7 +19,6 @@ public class CPU {
     Process p;
     OS os;
     MemoryUnit mu;
-    
     
     public CPU(){
         this(null,null,null);
@@ -51,7 +44,7 @@ public class CPU {
     public void addProcess(Process p){
         this.p = p;
         p.setState(ProcessState.CPU);
-        p.addCpuBurst();
+        // Se eliminó la línea p.addCpuBurst() para evitar contar ingresos estáticos.
     }
     
     public Process getProcess(){
@@ -63,8 +56,13 @@ public class CPU {
     }
     
     public void update(){
-        if(!isEmpty())
+        if(!isEmpty()) {
+            // Modificado: Si la instrucción actual es de CPU, registramos el ciclo de cómputo real
+            if (p.getCurrentInstruction() != null && p.getCurrentInstruction().getType() == ProcessInstructionType.CPU) {
+                p.addCpuCycles(1);
+            }
             advanceInstruction();
+        }
         mu.update();
     }
     
@@ -77,13 +75,11 @@ public class CPU {
     }
     
     public void advanceInstruction(){
-        
         Instruction i = p.getCurrentInstruction();
         p.advanceInstruction();
         Process tempp;
         switch(i.getType()){
             case MEMORY -> {
-                //executeMemoryOperation((MemoryInstruction) i);
                 System.out.println("Executing Memory instruction");
                 tempp = removeProcess();
                 os.interrupt(InterruptType.CPU_TO_MEMORY, tempp);
@@ -102,11 +98,8 @@ public class CPU {
                 tempp = removeProcess();
                 os.interrupt(InterruptType.FINISH_PROCESS, tempp);
             }
-default -> throw new AssertionError(i.getType().name());
-
+            default -> throw new AssertionError(i.getType().name());
         }
-        
-        
     }
     
     public void interrupt(InterruptType t, Process p, Instruction i){
@@ -129,7 +122,6 @@ default -> throw new AssertionError(i.getType().name());
         return temp;
     }
     
-    
     @Override
     public String toString(){
         if(!isEmpty())
@@ -147,13 +139,10 @@ default -> throw new AssertionError(i.getType().name());
     }
     
     void loadPage(int frameMem, int frameSwap) {
-        mu.loadPage(frameMem,frameSwap); //Bring the page from frame frameSwap in swapt to frame frameMem in memory
+        mu.loadPage(frameMem,frameSwap);
     }
     
     void storePage(int frameMem, int frameSwap) {
-        mu.storePage(frameMem,frameSwap); //Send the page from frame frameMem in memory to frameSwap in swapt
+        mu.storePage(frameMem,frameSwap);
     }
-    
-   
-    
 }
