@@ -22,7 +22,7 @@ This document outlines the four main roles required to complete the Predictive a
 **Recommended Skills:** Python, Pandas, Scikit-learn, Data Analysis.
 
 ## 3. ⚙️ The Scheduler Architect (Java ML Integrator)
-**Owner:** `Juan Diego Susunaga`
+**Owner:** `Alejandra Contreras`
 **Focus Phase:** Phase 3 (Predictive Planning)
 **Responsibilities:**
 - Create the `ML_Scheduler.java` class inside the `predictive` package.
@@ -31,7 +31,7 @@ This document outlines the four main roles required to complete the Predictive a
 **Recommended Skills:** Advanced Java, algorithms, understanding of CPU scheduling (Round Robin, FCFS).
 
 ## 4. 📊 The QA & Benchmarking Engineer (UI & Analytics)
-**Owner:** `[Unassigned]`
+**Owner:** `Juan Diego Susunaga`
 **Focus Phase:** Phase 1 (UI) & Phase 4 (Evaluation)
 **Responsibilities:**
 - Implement the `UserIntentInterface.java` that prompts the user for their profile (Development, Office, Multimedia) during the UR-OS boot sequence.

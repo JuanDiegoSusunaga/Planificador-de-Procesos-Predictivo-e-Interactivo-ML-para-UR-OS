@@ -22,7 +22,7 @@ Este documento describe los cuatro roles principales necesarios para completar e
 **Habilidades Recomendadas:** Python, Pandas, Scikit-learn, Análisis de Datos.
 
 ## 3. ⚙️ El Arquitecto del Planificador (Integrador ML en Java)
-**Responsable:** `Juan Diego Susunaga`
+**Responsable:** `Alejandra Contreras`
 **Fase de Enfoque:** Fase 3 (Planificación Predictiva)
 **Responsabilidades:**
 - Crear la clase `ML_Scheduler.java` dentro del paquete `predictive`.
@@ -31,7 +31,7 @@ Este documento describe los cuatro roles principales necesarios para completar e
 **Habilidades Recomendadas:** Java avanzado, algoritmos, comprensión de la planificación de CPU (Round Robin, FCFS).
 
 ## 4. 📊 El Ingeniero de QA y Benchmarking (UI y Analítica)
-**Responsable:** `[Sin asignar]`
+**Responsable:** `Juan Diego Susunaga`
 **Fase de Enfoque:** Fase 1 (UI) y Fase 4 (Evaluación)
 **Responsabilidades:**
 - Implementar la clase `UserIntentInterface.java` que solicita al usuario su perfil (Desarrollo, Oficina, Multimedia) durante la secuencia de arranque de UR-OS.
