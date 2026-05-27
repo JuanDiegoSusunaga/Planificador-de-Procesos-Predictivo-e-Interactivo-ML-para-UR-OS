@@ -50,3 +50,12 @@ venv/
 # OS generated files (Windows / Mac)
 .DS_Store
 Thumbs.db
+
+# LaTeX report (each member edits locally; not synced via git)
+main.tex
+*.aux
+*.toc
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
