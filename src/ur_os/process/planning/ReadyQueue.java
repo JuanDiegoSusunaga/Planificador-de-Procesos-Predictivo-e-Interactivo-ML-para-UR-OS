@@ -22,11 +22,25 @@ public class ReadyQueue {
     public ReadyQueue(OS os){
         this.os = os;
         
+        
+        // Usar ML_Scheduler si el usuario ya eligió un perfil
+        if (ur_os.UR_OS.globalUserIntent != null && 
+            !ur_os.UR_OS.globalUserIntent.equals("Unknown")) {
+
+            s = new ur_os.process.planning.predictive.ML_Scheduler(os);
+            System.out.println("[ReadyQueue] Usando ML_Scheduler (perfil: " + 
+                               ur_os.UR_OS.globalUserIntent + ")");
+
+        } else {
+            s = new FCFS(os);
+            System.out.println("[ReadyQueue] Usando FCFS (sin perfil seleccionado)");
+        }
+        
         //s = new SJF_P(os);
         
         //s = new SJF_NP(os);
         
-        s = new FCFS(os);
+        //s = new FCFS(os);
         
         //s = new RoundRobin(os,6);
         
