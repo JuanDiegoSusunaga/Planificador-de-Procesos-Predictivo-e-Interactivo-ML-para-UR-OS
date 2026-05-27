@@ -15,7 +15,7 @@ public abstract class Instruction {
     boolean finished;
     
     public Instruction(){
-        this(ProcessInstructionType.CPU, 1); //Use for CPU instructions
+        this(ProcessInstructionType.CPU, 10); //Use for CPU instructions
     }
     
     

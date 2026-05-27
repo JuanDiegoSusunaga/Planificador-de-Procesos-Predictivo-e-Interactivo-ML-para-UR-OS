@@ -4,24 +4,23 @@
  */
 package ur_os.process;
 
-/**
- *
- * @author user
- */
 public class CPUInstruction extends Instruction{
     
     public CPUInstruction(){
-        super();
+        super(ProcessInstructionType.CPU, 8);  
+    }
+    
+    public CPUInstruction(int cycles){
+        super(ProcessInstructionType.CPU, cycles);  
     }
     
     public CPUInstruction(Instruction i){
         this();
         if(i instanceof CPUInstruction){    
-            CPUInstruction m =(CPUInstruction)i;
+            CPUInstruction m = (CPUInstruction)i;
             this.type = m.type;
             this.cycleNumber = m.cycleNumber;
             this.remainingCycles = m.remainingCycles;
         }
     }
-    
 }
