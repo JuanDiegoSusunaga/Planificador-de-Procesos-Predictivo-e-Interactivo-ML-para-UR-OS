@@ -36,6 +36,7 @@ SCHEDULERS = [
     ("ML",     "TREE"),
 ]
 PROFILES = {1: "Office", 2: "Development", 3: "Multimedia"}
+WORKLOADS = ["default", "stress"]
 
 METRIC_PATTERNS = {
     "TotalCycles":         re.compile(r"Total execution cycles:\s*(\S+)"),
@@ -59,11 +60,13 @@ def compile_sources() -> None:
         sys.exit(f"javac failed (exit {res.returncode})")
 
 
-def run_one(scheduler: str, evaluator: str | None, profile_id: int, max_cycles: int) -> dict:
+def run_one(scheduler: str, evaluator: str | None, profile_id: int,
+            max_cycles: int, workload: str) -> dict:
     cmd = [
         "java",
         f"-Dur_os.scheduler={scheduler}",
         f"-Dur_os.max_cycles={max_cycles}",
+        f"-Dur_os.workload={workload}",
     ]
     if evaluator is not None:
         cmd.append(f"-Dur_os.evaluator={evaluator}")
@@ -96,31 +99,34 @@ def main():
         compile_sources()
 
     OUTPUT_CSV.parent.mkdir(parents=True, exist_ok=True)
-    fields = ["Run", "Scheduler", "Evaluator", "Profile", *METRIC_PATTERNS.keys()]
+    fields = ["Run", "Workload", "Scheduler", "Evaluator", "Profile", *METRIC_PATTERNS.keys()]
 
     with OUTPUT_CSV.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=fields)
         writer.writeheader()
 
         for run in range(1, args.runs + 1):
-            for sched, evaluator in SCHEDULERS:
-                label = f"{sched}+{evaluator}" if evaluator else sched
-                for pid, pname in PROFILES.items():
-                    print(f"[run {run}] {label:10s} / {pname:11s} ... ", end="", flush=True)
-                    try:
-                        metrics = run_one(sched, evaluator, pid, args.max_cycles)
-                        row = {
-                            "Run": run,
-                            "Scheduler": sched,
-                            "Evaluator": evaluator or "",
-                            "Profile": pname,
-                            **metrics,
-                        }
-                        writer.writerow(row)
-                        fh.flush()
-                        print(f"OK  Wait={metrics['AvgWaiting']:>7s}  TAT={metrics['AvgTurnaround']:>7s}")
-                    except Exception as exc:
-                        print(f"FAIL ({exc})")
+            for workload in WORKLOADS:
+                for sched, evaluator in SCHEDULERS:
+                    label = f"{sched}+{evaluator}" if evaluator else sched
+                    for pid, pname in PROFILES.items():
+                        print(f"[run {run}] {workload:7s} / {label:10s} / {pname:11s} ... ",
+                              end="", flush=True)
+                        try:
+                            metrics = run_one(sched, evaluator, pid, args.max_cycles, workload)
+                            row = {
+                                "Run": run,
+                                "Workload": workload,
+                                "Scheduler": sched,
+                                "Evaluator": evaluator or "",
+                                "Profile": pname,
+                                **metrics,
+                            }
+                            writer.writerow(row)
+                            fh.flush()
+                            print(f"OK  Wait={metrics['AvgWaiting']:>7s}  TAT={metrics['AvgTurnaround']:>7s}")
+                        except Exception as exc:
+                            print(f"FAIL ({exc})")
 
     print(f"\n[done] wrote {OUTPUT_CSV}")
 
