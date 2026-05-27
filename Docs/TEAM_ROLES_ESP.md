@@ -22,7 +22,7 @@ Este documento describe los cuatro roles principales necesarios para completar e
 **Habilidades Recomendadas:** Python, Pandas, Scikit-learn, Análisis de Datos.
 
 ## 3. ⚙️ El Arquitecto del Planificador (Integrador ML en Java)
-**Responsable:** `[Sin asignar]`
+**Responsable:** `Alejandra Contreras`
 **Fase de Enfoque:** Fase 3 (Planificación Predictiva)
 **Responsabilidades:**
 - Crear la clase `ML_Scheduler.java` dentro del paquete `predictive`.
