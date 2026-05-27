@@ -521,26 +521,36 @@ public class SystemOS implements Runnable {
 
     public double calcTurnaroundTime() {
         double tot = 0;
+        int count = 0;
 
         for (Process p : processes) {
-            tot = tot + (p.getTime_finished() - p.getTime_init());
+            if (p.getTime_finished() < 0) continue;
+            tot += (p.getTime_finished() - p.getTime_init());
+            count++;
         }
 
-        return tot / processes.size();
+        return count == 0 ? 0 : tot / count;
     }
 
     public double calcThroughput() {
-        return (double) processes.size() / execution.size();
+        int finished = 0;
+        for (Process p : processes) {
+            if (p.getTime_finished() >= 0) finished++;
+        }
+        return (double) finished / execution.size();
     }
 
     public double calcAvgWaitingTime() {
         double tot = 0;
+        int count = 0;
 
         for (Process p : processes) {
-            tot = tot + ((p.getTime_finished() - p.getTime_init()) - p.getTotalExecutionTime());
+            if (p.getTime_finished() < 0) continue;
+            tot += ((p.getTime_finished() - p.getTime_init()) - p.getTotalExecutionTime());
+            count++;
         }
 
-        return tot / processes.size();
+        return count == 0 ? 0 : tot / count;
     }
 
     public double calcAvgContextSwitches() {
@@ -559,13 +569,16 @@ public class SystemOS implements Runnable {
 
     public double calcAvgResponseTime() {
         double tot = 0;
+        int count = 0;
         int temp;
 
         for (Process p : processes) {
             temp = execution.indexOf(p.getPid());
-            tot = tot + (temp - p.getTime_init());
+            if (temp < 0) continue;
+            tot += (temp - p.getTime_init());
+            count++;
         }
 
-        return tot / processes.size();
+        return count == 0 ? 0 : tot / count;
     }
 }

@@ -10,7 +10,7 @@ public class TelemetryManager {
     private static TelemetryManager instance;
     private BufferedWriter writer;
 
-    private final String CSV_PATH = "C:\\Users\\msand\\OneDrive\\Documentos\\GitHub\\Planificador-de-Procesos-Predictivo-e-Interactivo-ML-para-UR-OS\\ml_training\\datasets\\telemetry_data.csv";
+    private final String CSV_PATH = "ml_training/datasets/telemetry_data.csv";
 
     private TelemetryManager() {
         try {
