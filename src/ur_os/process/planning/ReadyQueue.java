@@ -7,8 +7,10 @@ package ur_os.process.planning;
 
 import java.util.ArrayList;
 import ur_os.process.Process;
+import ur_os.process.planning.predictive.ML_ModelEvaluator;
 import ur_os.process.planning.predictive.ML_Scheduler;
 import ur_os.process.planning.predictive.RuleBasedEvaluator;
+import ur_os.process.planning.predictive.TreeBasedEvaluator;
 import ur_os.system.OS;
 
 /**
@@ -40,9 +42,21 @@ public class ReadyQueue {
                                 new RoundRobin(os,6,false),
                                 new RoundRobin(os,3,false),
                                 new RoundRobin(os,2,false));
-            case "ML":       return new ML_Scheduler(os, new RuleBasedEvaluator());
+            case "ML":       return new ML_Scheduler(os, buildEvaluator());
             case "FCFS":
             default:         return new FCFS(os);
+        }
+    }
+
+    // Selección por System property -Dur_os.evaluator=RULE|TREE.
+    // RULE = if-else placeholder (Fase 3 inicial). TREE = árbol entrenado por
+    // Mariana en Fase 2 (commit 8ab63bf de feature/phase2-ml-training).
+    private static ML_ModelEvaluator buildEvaluator(){
+        String pick = System.getProperty("ur_os.evaluator", "RULE").toUpperCase();
+        switch (pick) {
+            case "TREE": return new TreeBasedEvaluator();
+            case "RULE":
+            default:     return new RuleBasedEvaluator();
         }
     }
     

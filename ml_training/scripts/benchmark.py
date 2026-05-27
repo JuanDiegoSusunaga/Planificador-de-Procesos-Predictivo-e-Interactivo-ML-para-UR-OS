@@ -26,7 +26,15 @@ BUILD_DIR = ROOT / "build" / "classes"
 OUTPUT_CSV = ROOT / "ml_training" / "datasets" / "benchmark_results.csv"
 SRC_DIR = ROOT / "src"
 
-SCHEDULERS = ["FCFS", "RR", "SJF_NP", "SJF_P", "ML"]
+# (scheduler, evaluator) tuples. Evaluator is only relevant for ML; ignored otherwise.
+SCHEDULERS = [
+    ("FCFS",   None),
+    ("RR",     None),
+    ("SJF_NP", None),
+    ("SJF_P",  None),
+    ("ML",     "RULE"),
+    ("ML",     "TREE"),
+]
 PROFILES = {1: "Office", 2: "Development", 3: "Multimedia"}
 
 METRIC_PATTERNS = {
@@ -51,24 +59,25 @@ def compile_sources() -> None:
         sys.exit(f"javac failed (exit {res.returncode})")
 
 
-def run_one(scheduler: str, profile_id: int, max_cycles: int) -> dict:
+def run_one(scheduler: str, evaluator: str | None, profile_id: int, max_cycles: int) -> dict:
     cmd = [
         "java",
         f"-Dur_os.scheduler={scheduler}",
         f"-Dur_os.max_cycles={max_cycles}",
-        "-cp", str(BUILD_DIR),
-        "ur_os.UR_OS",
-        str(profile_id),
     ]
+    if evaluator is not None:
+        cmd.append(f"-Dur_os.evaluator={evaluator}")
+    cmd += ["-cp", str(BUILD_DIR), "ur_os.UR_OS", str(profile_id)]
     res = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
+    label = f"{scheduler}+{evaluator}" if evaluator else scheduler
     if res.returncode != 0:
-        raise RuntimeError(f"sim crashed: {scheduler}/{profile_id}\n{res.stderr[:500]}")
+        raise RuntimeError(f"sim crashed: {label}/{profile_id}\n{res.stderr[:500]}")
 
     metrics = {}
     for name, pattern in METRIC_PATTERNS.items():
         m = pattern.search(res.stdout)
         if not m:
-            raise RuntimeError(f"missing metric {name} for {scheduler}/{profile_id}")
+            raise RuntimeError(f"missing metric {name} for {label}/{profile_id}")
         metrics[name] = m.group(1)
     return metrics
 
@@ -87,19 +96,26 @@ def main():
         compile_sources()
 
     OUTPUT_CSV.parent.mkdir(parents=True, exist_ok=True)
-    fields = ["Run", "Scheduler", "Profile", *METRIC_PATTERNS.keys()]
+    fields = ["Run", "Scheduler", "Evaluator", "Profile", *METRIC_PATTERNS.keys()]
 
     with OUTPUT_CSV.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=fields)
         writer.writeheader()
 
         for run in range(1, args.runs + 1):
-            for sched in SCHEDULERS:
+            for sched, evaluator in SCHEDULERS:
+                label = f"{sched}+{evaluator}" if evaluator else sched
                 for pid, pname in PROFILES.items():
-                    print(f"[run {run}] {sched:7s} / {pname:11s} ... ", end="", flush=True)
+                    print(f"[run {run}] {label:10s} / {pname:11s} ... ", end="", flush=True)
                     try:
-                        metrics = run_one(sched, pid, args.max_cycles)
-                        row = {"Run": run, "Scheduler": sched, "Profile": pname, **metrics}
+                        metrics = run_one(sched, evaluator, pid, args.max_cycles)
+                        row = {
+                            "Run": run,
+                            "Scheduler": sched,
+                            "Evaluator": evaluator or "",
+                            "Profile": pname,
+                            **metrics,
+                        }
                         writer.writerow(row)
                         fh.flush()
                         print(f"OK  Wait={metrics['AvgWaiting']:>7s}  TAT={metrics['AvgTurnaround']:>7s}")
