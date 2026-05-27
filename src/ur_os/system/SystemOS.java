@@ -21,7 +21,7 @@ public class SystemOS implements Runnable {
 
     private static int clock = 0;
 
-    private static final int MAX_SIM_CYCLES = 1000;
+    private static final int MAX_SIM_CYCLES = Integer.getInteger("ur_os.max_cycles", 1000);
     private static final int MAX_SIM_PROC_CREATION_TIME = 50;
     private static final double PROB_PROC_CREATION = 0.1;
 
