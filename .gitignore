@@ -20,6 +20,9 @@ nbbuild/
 .idea/
 *.iml
 
+# Claude Code local settings (per-machine permissions, no compartir)
+.claude/
+
 # ---------------------------------------------------
 # Python & Machine Learning (Para la Fase 2 del proyecto)
 # ---------------------------------------------------

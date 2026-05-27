@@ -21,7 +21,7 @@ public class SystemOS implements Runnable {
 
     private static int clock = 0;
 
-    private static final int MAX_SIM_CYCLES = 1000;
+    private static final int MAX_SIM_CYCLES = Integer.getInteger("ur_os.max_cycles", 1000);
     private static final int MAX_SIM_PROC_CREATION_TIME = 50;
     private static final double PROB_PROC_CREATION = 0.1;
 
@@ -59,7 +59,15 @@ public class SystemOS implements Runnable {
         execution = new ArrayList<>();
         processes = new ArrayList<>();
 
-        initSimulationQueueProfileBased();
+        // -Dur_os.workload=default|stress (Fase 4). Default = 60 procesos por
+        // perfil; stress = 200 procesos con bursts mas largos, para evaluar el
+        // ML_Scheduler bajo presion sostenida.
+        String workload = System.getProperty("ur_os.workload", "default").toLowerCase();
+        if (workload.equals("stress")) {
+            initSimulationQueueStress();
+        } else {
+            initSimulationQueueProfileBased();
+        }
 
         showProcesses();
 
@@ -232,6 +240,79 @@ public class SystemOS implements Runnable {
                 p.addCPUInstructions(cpuBetweenIO);
             }
 
+            p.addCPUInstructions(cpu2);
+            p.addInstruction(new EndInstruction());
+
+            processes.add(p);
+        }
+
+        clock = 0;
+    }
+
+    // Stress workload para Fase 4: misma forma que ProfileBased pero con
+    // 200 procesos (3.3x), CPU bursts hasta 2x mas largos y mas IO blocks.
+    // Diseñado para saturar el scheduler y exponer diferencias entre algoritmos
+    // que con el workload default quedan dentro del ruido estadistico.
+    public void initSimulationQueueStress() {
+        processes.clear();
+
+        String intent = ur_os.UR_OS.globalUserIntent;
+        if (intent == null || intent.trim().isEmpty()) {
+            intent = "Unknown";
+        }
+
+        Random rand = new Random();
+        int numberOfProcesses = 200;
+
+        for (int i = 0; i < numberOfProcesses; i++) {
+            int arrivalTime;
+            if (rand.nextDouble() < 0.6) {
+                arrivalTime = rand.nextInt(30);
+            } else {
+                arrivalTime = 30 + rand.nextInt(MAX_SIM_PROC_CREATION_TIME * 2 - 30);
+            }
+
+            Process p = new Process(i, arrivalTime);
+            int tempSize = 200 + rand.nextInt(MAX_PROC_SIZE - 200);
+            p.setSize(tempSize);
+            p.setUserIntent(intent);
+            p.setArrivalTime(arrivalTime);
+            p.setTime_init(arrivalTime);
+
+            int cpu1, cpu2, numberOfIOBlocks;
+            double behavior = rand.nextDouble();
+
+            switch (intent) {
+                case "Development":
+                    cpu1 = 20 + rand.nextInt(40);
+                    cpu2 = 20 + rand.nextInt(40);
+                    numberOfIOBlocks = (behavior < 0.7) ? rand.nextInt(3)
+                                                       : 2 + rand.nextInt(4);
+                    break;
+                case "Multimedia":
+                    cpu1 = 10 + rand.nextInt(25);
+                    cpu2 = 10 + rand.nextInt(25);
+                    numberOfIOBlocks = 4 + rand.nextInt(6);
+                    break;
+                case "Office":
+                    cpu1 = 4 + rand.nextInt(12);
+                    cpu2 = 4 + rand.nextInt(12);
+                    numberOfIOBlocks = 2 + rand.nextInt(4);
+                    break;
+                default:
+                    cpu1 = 8 + rand.nextInt(20);
+                    cpu2 = 8 + rand.nextInt(20);
+                    numberOfIOBlocks = 1 + rand.nextInt(4);
+                    break;
+            }
+
+            p.addCPUInstructions(cpu1);
+            for (int j = 0; j < numberOfIOBlocks; j++) {
+                int ioDuration = 2 + rand.nextInt(15);
+                p.addInstruction(new IOInstruction(ioDuration));
+                int cpuBetween = 3 + rand.nextInt(12);
+                p.addCPUInstructions(cpuBetween);
+            }
             p.addCPUInstructions(cpu2);
             p.addInstruction(new EndInstruction());
 
@@ -521,26 +602,36 @@ public class SystemOS implements Runnable {
 
     public double calcTurnaroundTime() {
         double tot = 0;
+        int count = 0;
 
         for (Process p : processes) {
-            tot = tot + (p.getTime_finished() - p.getTime_init());
+            if (p.getTime_finished() < 0) continue;
+            tot += (p.getTime_finished() - p.getTime_init());
+            count++;
         }
 
-        return tot / processes.size();
+        return count == 0 ? 0 : tot / count;
     }
 
     public double calcThroughput() {
-        return (double) processes.size() / execution.size();
+        int finished = 0;
+        for (Process p : processes) {
+            if (p.getTime_finished() >= 0) finished++;
+        }
+        return (double) finished / execution.size();
     }
 
     public double calcAvgWaitingTime() {
         double tot = 0;
+        int count = 0;
 
         for (Process p : processes) {
-            tot = tot + ((p.getTime_finished() - p.getTime_init()) - p.getTotalExecutionTime());
+            if (p.getTime_finished() < 0) continue;
+            tot += ((p.getTime_finished() - p.getTime_init()) - p.getTotalExecutionTime());
+            count++;
         }
 
-        return tot / processes.size();
+        return count == 0 ? 0 : tot / count;
     }
 
     public double calcAvgContextSwitches() {
@@ -559,13 +650,16 @@ public class SystemOS implements Runnable {
 
     public double calcAvgResponseTime() {
         double tot = 0;
+        int count = 0;
         int temp;
 
         for (Process p : processes) {
             temp = execution.indexOf(p.getPid());
-            tot = tot + (temp - p.getTime_init());
+            if (temp < 0) continue;
+            tot += (temp - p.getTime_init());
+            count++;
         }
 
-        return tot / processes.size();
+        return count == 0 ? 0 : tot / count;
     }
 }

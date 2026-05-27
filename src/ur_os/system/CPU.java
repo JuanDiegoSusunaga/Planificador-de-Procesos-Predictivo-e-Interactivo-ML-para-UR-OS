@@ -82,6 +82,10 @@ public class CPU {
     }
 
     public void advanceInstruction() {
+        if (p == null) {
+            return;
+        }
+
         Instruction i = p.getCurrentInstruction();
         p.advanceInstruction();
 

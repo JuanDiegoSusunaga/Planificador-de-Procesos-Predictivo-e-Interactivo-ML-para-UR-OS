@@ -73,6 +73,7 @@ public class TelemetryManager {
                 );
                 writer.newLine();
                 writer.flush();
+                System.out.println("Datos guardados: " + processId + "," + userIntent + "," + cpuCycles + "," + ioBlocks + "," + turnaroundTime);
             } catch (IOException e) {
                 System.err.println("Error guardando datos del proceso: " + processId);
             }
