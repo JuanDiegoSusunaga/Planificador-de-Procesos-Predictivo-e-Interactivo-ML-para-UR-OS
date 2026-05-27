@@ -21,7 +21,7 @@ for intent in df['UserIntent'].unique():
 le = LabelEncoder()
 df['UserIntentCode'] = le.fit_transform(df['UserIntent'])
 
-X = df[['UserIntentCode', 'CpuBursts', 'IoBlocks']]
+X = df[['UserIntentCode', 'CpuCycles', 'IoBlocks']]
 y = df['should_prioritize']
 
 clf = DecisionTreeClassifier(max_depth=4, min_samples_split=30, random_state=42)
@@ -64,14 +64,14 @@ def tree_to_json_rules(tree, feature_names):
     return rules
 
 # Exportar reglas a JSON
-rules = tree_to_json_rules(clf, ['UserIntentCode', 'CpuBursts', 'IoBlocks'])
+rules = tree_to_json_rules(clf, ['UserIntentCode', 'CpuCycles', 'IoBlocks'])
 
 # Crear JSON completo con metadata
 output_data = {
     "model_type": "DecisionTree",
     "version": "1.0",
     "max_depth": int(clf.tree_.max_depth),
-    "feature_names": ["UserIntentCode", "CpuBursts", "IoBlocks"],
+    "feature_names": ["UserIntentCode", "CpuCycles", "IoBlocks"],
     "intent_mapping": {
         "dev": 0,
         "office": 1,
@@ -82,7 +82,7 @@ output_data = {
     "usage_example": {
         "input": {
             "UserIntentCode": 1,
-            "CpuBursts": 15,
+            "CpuCycles": 15,
             "IoBlocks": 5
         },
         "how_to_evaluate": "Recorrer las reglas en orden, la primera que cumpla todas las condiciones devuelve su decisión"

@@ -2,4 +2,43 @@
 Decision Tree Rules for UR-OS Scheduler
 ============================================================
 
-|--- class: 0
+|--- IoBlocks <= 0.50
+|   |--- UserIntentCode <= 0.50
+|   |   |--- CpuCycles <= 45.50
+|   |   |   |--- CpuCycles <= 36.50
+|   |   |   |   |--- class: 0
+|   |   |   |--- CpuCycles >  36.50
+|   |   |   |   |--- class: 1
+|   |   |--- CpuCycles >  45.50
+|   |   |   |--- CpuCycles <= 64.50
+|   |   |   |   |--- class: 0
+|   |   |   |--- CpuCycles >  64.50
+|   |   |   |   |--- class: 1
+|   |--- UserIntentCode >  0.50
+|   |   |--- CpuCycles <= 20.50
+|   |   |   |--- class: 1
+|   |   |--- CpuCycles >  20.50
+|   |   |   |--- CpuCycles <= 31.50
+|   |   |   |   |--- class: 0
+|   |   |   |--- CpuCycles >  31.50
+|   |   |   |   |--- class: 1
+|--- IoBlocks >  0.50
+|   |--- IoBlocks <= 1.50
+|   |   |--- UserIntentCode <= 1.50
+|   |   |   |--- CpuCycles <= 30.50
+|   |   |   |   |--- class: 0
+|   |   |   |--- CpuCycles >  30.50
+|   |   |   |   |--- class: 0
+|   |   |--- UserIntentCode >  1.50
+|   |   |   |--- CpuCycles <= 18.50
+|   |   |   |   |--- class: 0
+|   |   |   |--- CpuCycles >  18.50
+|   |   |   |   |--- class: 0
+|   |--- IoBlocks >  1.50
+|   |   |--- CpuCycles <= 26.50
+|   |   |   |--- CpuCycles <= 25.50
+|   |   |   |   |--- class: 0
+|   |   |   |--- CpuCycles >  25.50
+|   |   |   |   |--- class: 0
+|   |   |--- CpuCycles >  26.50
+|   |   |   |--- class: 0

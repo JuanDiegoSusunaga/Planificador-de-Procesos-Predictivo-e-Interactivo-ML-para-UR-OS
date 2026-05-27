@@ -39,7 +39,7 @@ intent_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
 print(f"   Mapeo: {intent_mapping}")
 
 # Preparar features
-features = ['UserIntentCode', 'CpuBursts', 'IoBlocks']
+features = ['UserIntentCode', 'CpuCycles', 'IoBlocks']
 X = df[features]
 y = df['should_prioritize']
 

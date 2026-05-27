@@ -1,0 +1,164 @@
+{
+  "model_type": "DecisionTree",
+  "version": "1.0",
+  "max_depth": 4,
+  "feature_names": [
+    "UserIntentCode",
+    "CpuCycles",
+    "IoBlocks"
+  ],
+  "intent_mapping": {
+    "dev": 0,
+    "office": 1,
+    "multimedia": 2
+  },
+  "description": "Reglas para priorización de procesos según perfil de usuario",
+  "rules": [
+    {
+      "conditions": [
+        "IoBlocks <= 0.50",
+        "UserIntentCode <= 0.50",
+        "CpuCycles <= 44.50",
+        "CpuCycles <= 43.50"
+      ],
+      "decision": 1,
+      "confidence": 0.5576923076923077
+    },
+    {
+      "conditions": [
+        "IoBlocks <= 0.50",
+        "UserIntentCode <= 0.50",
+        "CpuCycles <= 44.50",
+        "CpuCycles > 43.50"
+      ],
+      "decision": 1,
+      "confidence": 1.0
+    },
+    {
+      "conditions": [
+        "IoBlocks <= 0.50",
+        "UserIntentCode <= 0.50",
+        "CpuCycles > 44.50",
+        "CpuCycles <= 66.50"
+      ],
+      "decision": 0,
+      "confidence": 0.547945205479452
+    },
+    {
+      "conditions": [
+        "IoBlocks <= 0.50",
+        "UserIntentCode <= 0.50",
+        "CpuCycles > 44.50",
+        "CpuCycles > 66.50"
+      ],
+      "decision": 1,
+      "confidence": 0.7142857142857143
+    },
+    {
+      "conditions": [
+        "IoBlocks <= 0.50",
+        "UserIntentCode > 0.50",
+        "CpuCycles <= 20.50"
+      ],
+      "decision": 1,
+      "confidence": 1.0
+    },
+    {
+      "conditions": [
+        "IoBlocks <= 0.50",
+        "UserIntentCode > 0.50",
+        "CpuCycles > 20.50",
+        "CpuCycles <= 31.50"
+      ],
+      "decision": 0,
+      "confidence": 1.0
+    },
+    {
+      "conditions": [
+        "IoBlocks <= 0.50",
+        "UserIntentCode > 0.50",
+        "CpuCycles > 20.50",
+        "CpuCycles > 31.50"
+      ],
+      "decision": 1,
+      "confidence": 0.8068181818181818
+    },
+    {
+      "conditions": [
+        "IoBlocks > 0.50",
+        "IoBlocks <= 1.50",
+        "UserIntentCode <= 1.50",
+        "CpuCycles <= 30.50"
+      ],
+      "decision": 0,
+      "confidence": 0.8
+    },
+    {
+      "conditions": [
+        "IoBlocks > 0.50",
+        "IoBlocks <= 1.50",
+        "UserIntentCode <= 1.50",
+        "CpuCycles > 30.50"
+      ],
+      "decision": 0,
+      "confidence": 0.9607843137254902
+    },
+    {
+      "conditions": [
+        "IoBlocks > 0.50",
+        "IoBlocks <= 1.50",
+        "UserIntentCode > 1.50",
+        "CpuCycles <= 10.50"
+      ],
+      "decision": 1,
+      "confidence": 0.5384615384615384
+    },
+    {
+      "conditions": [
+        "IoBlocks > 0.50",
+        "IoBlocks <= 1.50",
+        "UserIntentCode > 1.50",
+        "CpuCycles > 10.50"
+      ],
+      "decision": 0,
+      "confidence": 0.5726495726495726
+    },
+    {
+      "conditions": [
+        "IoBlocks > 0.50",
+        "IoBlocks > 1.50",
+        "CpuCycles <= 26.50",
+        "CpuCycles <= 25.50"
+      ],
+      "decision": 0,
+      "confidence": 0.9947643979057592
+    },
+    {
+      "conditions": [
+        "IoBlocks > 0.50",
+        "IoBlocks > 1.50",
+        "CpuCycles <= 26.50",
+        "CpuCycles > 25.50"
+      ],
+      "decision": 0,
+      "confidence": 0.9285714285714286
+    },
+    {
+      "conditions": [
+        "IoBlocks > 0.50",
+        "IoBlocks > 1.50",
+        "CpuCycles > 26.50"
+      ],
+      "decision": 0,
+      "confidence": 1.0
+    }
+  ],
+  "usage_example": {
+    "input": {
+      "UserIntentCode": 1,
+      "CpuCycles": 15,
+      "IoBlocks": 5
+    },
+    "how_to_evaluate": "Recorrer las reglas en orden, la primera que cumpla todas las condiciones devuelve su decisión"
+  }
+}

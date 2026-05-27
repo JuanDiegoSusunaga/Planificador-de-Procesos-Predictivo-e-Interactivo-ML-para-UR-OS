@@ -1,0 +1,58 @@
+[
+  {
+    "if": "IoBlocks <= 0.50 AND UserIntentCode <= 0.50 AND CpuCycles <= 44.50 AND CpuCycles <= 43.50",
+    "then": 1
+  },
+  {
+    "if": "IoBlocks <= 0.50 AND UserIntentCode <= 0.50 AND CpuCycles <= 44.50 AND CpuCycles > 43.50",
+    "then": 1
+  },
+  {
+    "if": "IoBlocks <= 0.50 AND UserIntentCode <= 0.50 AND CpuCycles > 44.50 AND CpuCycles <= 66.50",
+    "then": 0
+  },
+  {
+    "if": "IoBlocks <= 0.50 AND UserIntentCode <= 0.50 AND CpuCycles > 44.50 AND CpuCycles > 66.50",
+    "then": 1
+  },
+  {
+    "if": "IoBlocks <= 0.50 AND UserIntentCode > 0.50 AND CpuCycles <= 20.50",
+    "then": 1
+  },
+  {
+    "if": "IoBlocks <= 0.50 AND UserIntentCode > 0.50 AND CpuCycles > 20.50 AND CpuCycles <= 31.50",
+    "then": 0
+  },
+  {
+    "if": "IoBlocks <= 0.50 AND UserIntentCode > 0.50 AND CpuCycles > 20.50 AND CpuCycles > 31.50",
+    "then": 1
+  },
+  {
+    "if": "IoBlocks > 0.50 AND IoBlocks <= 1.50 AND UserIntentCode <= 1.50 AND CpuCycles <= 30.50",
+    "then": 0
+  },
+  {
+    "if": "IoBlocks > 0.50 AND IoBlocks <= 1.50 AND UserIntentCode <= 1.50 AND CpuCycles > 30.50",
+    "then": 0
+  },
+  {
+    "if": "IoBlocks > 0.50 AND IoBlocks <= 1.50 AND UserIntentCode > 1.50 AND CpuCycles <= 10.50",
+    "then": 1
+  },
+  {
+    "if": "IoBlocks > 0.50 AND IoBlocks <= 1.50 AND UserIntentCode > 1.50 AND CpuCycles > 10.50",
+    "then": 0
+  },
+  {
+    "if": "IoBlocks > 0.50 AND IoBlocks > 1.50 AND CpuCycles <= 26.50 AND CpuCycles <= 25.50",
+    "then": 0
+  },
+  {
+    "if": "IoBlocks > 0.50 AND IoBlocks > 1.50 AND CpuCycles <= 26.50 AND CpuCycles > 25.50",
+    "then": 0
+  },
+  {
+    "if": "IoBlocks > 0.50 AND IoBlocks > 1.50 AND CpuCycles > 26.50",
+    "then": 0
+  }
+]
